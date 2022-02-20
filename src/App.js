@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import Form from './Form.js';
 import './App.css';
 
