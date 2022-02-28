@@ -1,10 +1,10 @@
-import UrlForm from './UrlForm.js';
+import Shortener from './Shortener.js';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <UrlForm />
+      <Shortener />
     </div>
   );
 }

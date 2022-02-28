@@ -1,15 +1,13 @@
 import {useState} from 'react';
 
-const UrlForm = () => {
+const Shortener = () => {
     const [longUrl, setLongUrl] = useState('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
     const [shortUrl, setShortUrl] = useState('');
-    const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [inProgress, setInProgress] = useState(false);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = e => {
         e.preventDefault();
-        setSuccess(false);
         setError(false);
         setInProgress(true);
 
@@ -21,37 +19,31 @@ const UrlForm = () => {
                 const data = await response.json();
                 if (!response.ok) {
                     const error = (data && data.message) || response.statusText;
-                    setError(true);
                     return Promise.reject(error);
                 }
 
-                console.log(data);
                 setShortUrl(data.short_url)
-                setSuccess(true);
                 setError(false);
             })
             .catch(error => {
-                setSuccess(false);
                 setError(true);
-                console.error('Error', error);
+                console.error(error);
             })
-            .finally(() => { setInProgress(false); });
+            .finally(() => setInProgress(false));
     }
 
-    const handleChange = (e) => setLongUrl(e.target.value);
+    const handleChange = e => setLongUrl(e.target.value);
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
                 <input style={{ width: '80%' }} onChange={handleChange} value={longUrl} type="text" name="longUrl" id="longUrl" />
-                <br/>
-                <input type="submit" value="Shorten" />
+                <br/><input type="submit" value="Shorten" disabled={inProgress}/>
             </form>
-            { inProgress && <p>Working...</p> }
-            { success && <p>Your short url: <a target="_blank" rel="noreferrer" href={shortUrl}>{shortUrl}</a></p> }
-            { error && <p>There was an error processing your request.</p> }
+            { shortUrl && <p>Your short url: <a target="_blank" rel="noreferrer" href={shortUrl}>{shortUrl}</a></p>}
+            { error && <p>Something went wrong! Please try again.</p> }
         </div>
     );
 }
 
-export default UrlForm;
+export default Shortener;
